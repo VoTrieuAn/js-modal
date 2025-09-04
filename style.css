@@ -24,7 +24,7 @@ body {
   border-radius: 8px;
   cursor: pointer;
   font-weight: bold;
-  transition: ease 0.2s;
+  transition: ease 0.3s;
 }
 
 .btn:hover {

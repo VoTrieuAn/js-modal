@@ -11,7 +11,24 @@ const $$ = document.querySelectorAll.bind(document);
     </div> */
 
 function Modal() {
-  this.openModal = (content) => {
+  this.openModal = (options = {}) => {
+    const { templateId } = options;
+    const template = $(`#${templateId}`);
+
+    if (!template) {
+      console.error(`#${templateId} dose not exist`);
+      return;
+    }
+
+    /**
+     * cloneNode(boolean)
+     * Dùng để nhân bản Node
+     * true: Nếu muốn nhân bản luôn phần tử con, chỉ nhân bản phần tử KHÔNG nhân bản phần xử lý sự kiện
+     * false: Nếu chỉ muốn lấy cha
+     */
+    const content = template.content.cloneNode(true);
+
+    // Create modal elements
     const backdrop = document.createElement("div");
     backdrop.className = "modal-backdrop";
     const container = document.createElement("div");
@@ -23,7 +40,7 @@ function Modal() {
     modalContent.className = "modal-content";
 
     // Append content and elements
-    modalContent.innerHTML = content;
+    modalContent.append(content);
     container.append(closeBtn, modalContent);
     backdrop.append(container);
     document.body.append(backdrop);
@@ -61,13 +78,17 @@ function Modal() {
 const modal = new Modal();
 // modal.openModal("<h1>Hello An Vo </h1>");
 $("#open-modal-1").onclick = () => {
-  modal.openModal("<h1>Hello An Vo 1</h1>");
+  modal.openModal({
+    templateId: "modal-1",
+  });
 };
 
 $("#open-modal-2").onclick = () => {
-  modal.openModal("<h1>Hello An Vo 2</h1>");
+  modal.openModal({
+    templateId: "modal-2",
+  });
 };
 
-$("#open-modal-3").onclick = () => {
-  modal.openModal("<h1>Hello An Vo 3</h1>");
-};
+// 1. Xử lý được sự kiện submit form, lấy được các giá trị của input khi submit
+// 2. Thêm tùy chọn bật/tắt cho phép click vào overlay để đóng modal
+// 3. Không cho phép cuộc trang khi modal hiện thị

@@ -8,19 +8,31 @@
   </head>
   <body>
     <main>
-      <button id="open-modal" class="btn">Open Modal</button>
+      <button class="btn" data-modal="#modal-1">Open Modal 1</button>
+      <button class="btn" data-modal="#modal-2">Open Modal 2</button>
+      <button class="btn" data-modal="#modal-3">Open Modal 3</button>
     </main>
-    <div id="modal" class="modal-backdrop">
+    <div id="modal-1" class="modal-backdrop">
       <div class="modal-container">
-        <button id="modal-close" class="modal-close">&times;</button>
+        <button class="modal-close">&times;</button>
         <div class="modal-content">
-          <p>
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Deleniti,
-            iusto illum facere non voluptatibus, aspernatur quas vero ipsam
-            porro, ratione fuga? Assumenda voluptatibus eligendi culpa alias
-            autem, adipisci cum nobis. Lorem ipsum dolor sit amet consectetur
-            adipisicing elit.
-          </p>
+          <p>Modal 1</p>
+        </div>
+      </div>
+    </div>
+    <div id="modal-2" class="modal-backdrop">
+      <div class="modal-container">
+        <button class="modal-close">&times;</button>
+        <div class="modal-content">
+          <p>Modal 2</p>
+        </div>
+      </div>
+    </div>
+    <div id="modal-3" class="modal-backdrop">
+      <div class="modal-container">
+        <button class="modal-close">&times;</button>
+        <div class="modal-content">
+          <p>Modal 3</p>
         </div>
       </div>
     </div>

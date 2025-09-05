@@ -59,7 +59,7 @@ body {
 .modal-container {
   position: relative;
   width: min(600px, 90%);
-  padding: 28px;
+  padding: 20px 20px 0;
   border-radius: 10px;
   background-color: #fff;
   transform: scale(0);
@@ -89,8 +89,6 @@ body {
   overflow: hidden;
 }
 
-#box {
-  height: 100px;
-  background-color: red;
-  overflow: scroll;
+.modal-footer {
+  padding: 20px 0;
 }

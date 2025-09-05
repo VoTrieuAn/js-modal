@@ -7,6 +7,8 @@ function Modal(options = {}) {
     destroyOnClose = true,
     cssClass = [],
     closeMethods = ["button", "overlay", "escape"],
+    onOpen,
+    onClose,
   } = options;
   const template = $(`#${templateId}`);
 
@@ -116,12 +118,24 @@ function Modal(options = {}) {
       });
     }
 
+    this._backdrop.ontransitionend = (e) => {
+      if (e.propertyName !== "transform") {
+        return;
+      }
+
+      if (typeof onOpen === "function") onOpen();
+    };
+
     return this._backdrop;
   };
 
   this.close = (destroy = destroyOnClose) => {
     this._backdrop.classList.remove("show");
-    this._backdrop.ontransitionend = () => {
+    this._backdrop.ontransitionend = (e) => {
+      if (e.propertyName !== "transform") {
+        return;
+      }
+
       // Sẽ bị nhân bản ra nhiều
       if (this._backdrop && destroy) {
         this._backdrop.remove();
@@ -132,6 +146,10 @@ function Modal(options = {}) {
       // Enable scrolling
       document.body.classList.remove("no-scroll");
       document.body.style.paddingRight = "";
+
+      if (typeof onClose === "function") {
+        onClose();
+      }
     };
   };
 
@@ -144,6 +162,12 @@ const modal = new Modal({
   templateId: "modal-1",
   destroyOnClose: false,
   cssClass: ["class-1", "class-2"],
+  onOpen: () => {
+    console.log("Modal Open 1");
+  },
+  onClose: () => {
+    console.log("Modal close 1");
+  },
 });
 // modal.open("<h1>Hello An Vo </h1>");
 $("#open-modal-1").onclick = () => {
@@ -152,6 +176,12 @@ $("#open-modal-1").onclick = () => {
 
 const modal2 = new Modal({
   templateId: "modal-2",
+  onOpen: () => {
+    console.log("Modal Open 2");
+  },
+  onClose: () => {
+    console.log("Modal close 2");
+  },
 });
 
 $("#open-modal-2").onclick = () => {
@@ -172,13 +202,13 @@ $("#open-modal-2").onclick = () => {
 };
 
 // Yêu cầu
-// 0. Tạo ra từng đối tượng modal để dễ quản lý
-// 1. modal.open()
-// 2. modal.close() ==> Chỉ gỡ class show chứ chưa gỡ khỏi DOM
+// 0. Tạo ra từng đối tượng modal để dễ quản lý (tick)
+// 1. modal.open() (tick)
+// 2. modal.close() ==> Chỉ gỡ class show chứ chưa gỡ khỏi DOM (tick)
 // 3. modal.setFooterContent("Html string");
 // 4. modal.addFooterButton("Cancel", "class-1 class-2", (e) => {})
 // 5. modal.addFooterButton("Agree", "class-3 class-4", (e) => {})
-// 6. modal.destroy() ==> Gỡ khởi DOM luôn
+// 6. modal.destroy() ==> Gỡ khởi DOM luôn (tick)
 // Chia yêu cầu làm 2 loại
 // 1. Yêu cầu độc lập không phụ thuộc
 // 2. Yêu cầu phụ thuộc

@@ -88,3 +88,9 @@ body {
 .no-scroll {
   overflow: hidden;
 }
+
+#box {
+  height: 100px;
+  background-color: red;
+  overflow: scroll;
+}

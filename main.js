@@ -61,6 +61,7 @@ function Modal() {
 
     // Disable scrolling
     document.body.classList.add("no-scroll");
+    document.body.style.paddingRight = getScrollbarWidth() + "px";
     return backdrop;
   };
 
@@ -71,6 +72,7 @@ function Modal() {
 
       // Enable scrolling
       document.body.classList.remove("no-scroll");
+      document.body.style.paddingRight = "";
     };
   };
 }
@@ -103,6 +105,20 @@ $("#open-modal-2").onclick = () => {
   }
 };
 
-// 1. Xử lý được sự kiện submit form, lấy được các giá trị của input khi submit
-// 2. Thêm tùy chọn bật/tắt cho phép click vào overlay để đóng modal
-// 3. Không cho phép cuộn trang khi modal hiện thị
+function getScrollbarWidth() {
+  const div = document.createElement("div");
+
+  Object.assign(div.style, {
+    overflow: "scroll",
+    position: "absolute",
+    top: "-9999px",
+  });
+
+  document.body.appendChild(div);
+
+  const scrollbarWidth = div.offsetWidth - div.clientWidth;
+
+  document.body.removeChild(div);
+
+  return scrollbarWidth;
+}

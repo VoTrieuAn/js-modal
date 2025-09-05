@@ -45,6 +45,7 @@ function Modal(options = {}) {
 
     return scrollbarWidth;
   }
+
   this._build = () => {
     /**
      * cloneNode(boolean)
@@ -94,6 +95,9 @@ function Modal(options = {}) {
         this._modalFooter.innerHTML = this._footerContent;
       }
 
+      this._footerButtons.forEach((button) => {
+        this._modalFooter.append(button);
+      });
       container.append(this._modalFooter);
     }
     this._backdrop.append(container);
@@ -105,6 +109,17 @@ function Modal(options = {}) {
     if (this._modalFooter) {
       this._modalFooter.innerHTML = html;
     }
+  };
+
+  this._footerButtons = [];
+
+  this.addFooterButton = (title, cssClass, callback) => {
+    const button = document.createElement("button");
+    button.className = cssClass;
+    button.innerHTML = title;
+    button.onclick = callback;
+
+    this._footerButtons.push(button);
   };
 
   this.open = () => {
@@ -223,6 +238,7 @@ $("#open-modal-2").onclick = () => {
 
 const modal3 = new Modal({
   templateId: "modal-3",
+  closeMethods: [],
   footer: true,
   onOpen: () => {
     console.log("Modal Open 3");
@@ -232,7 +248,19 @@ const modal3 = new Modal({
   },
 });
 
-modal3.setFooterContent("<h2>Xin chào Võ Triều An</h2>");
+// modal3.setFooterContent("<h2>Xin chào Võ Triều An</h2>");
+// modal3.addFooterButton("Danger", "modal-btn danger pull-left", (e) => {
+//   alert("Danger clicked");
+// });
+
+modal3.addFooterButton("Cancel", "modal-btn", (e) => {
+  modal3.close();
+});
+
+modal3.addFooterButton("<span>Agree</span>", "modal-btn primary", (e) => {
+  // ...Something
+  modal3.close();
+});
 modal3.open();
 
 // Yêu cầu
@@ -240,8 +268,8 @@ modal3.open();
 // 1. modal.open() (tick)
 // 2. modal.close() ==> Chỉ gỡ class show chứ chưa gỡ khỏi DOM (tick)
 // 3. modal.setFooterContent("Html string"); (tick)
-// 4. modal.addFooterButton("Cancel", "class-1 class-2", (e) => {})
-// 5. modal.addFooterButton("Agree", "class-3 class-4", (e) => {})
+// 4. modal.addFooterButton("Cancel", "class-1 class-2", (e) => {}) (tick)
+// 5. modal.addFooterButton("Agree", "class-3 class-4", (e) => {}) (tick)
 // 6. modal.destroy() ==> Gỡ khởi DOM luôn (tick)
 // Chia yêu cầu làm 2 loại
 // 1. Yêu cầu độc lập không phụ thuộc

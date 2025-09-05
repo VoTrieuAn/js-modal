@@ -14,15 +14,19 @@ body {
     Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
+button {
+  outline: none;
+  border: none;
+  cursor: pointer;
+  background-color: transparent;
+}
+
 .btn {
   margin: 30px;
   min-width: 124px;
   padding: 12px;
-  background-color: transparent;
-  outline: none;
   border: 1px solid #000;
   border-radius: 8px;
-  cursor: pointer;
   font-weight: bold;
   transition: ease 0.3s;
 }
@@ -85,10 +89,30 @@ body {
   overflow-y: auto;
 }
 
+.modal-btn {
+  padding: 8px 20px;
+  color: #fff;
+  background-color: #464e63;
+}
+
+.modal-btn.primary {
+  background-color: #377aad;
+}
+
+.modal-btn.danger {
+  background-color: #cc4e27;
+}
+
+.modal-btn.pull-left {
+  margin-right: auto;
+}
 .no-scroll {
   overflow: hidden;
 }
 
 .modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
   padding: 20px 0;
 }

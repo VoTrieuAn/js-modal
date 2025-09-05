@@ -1,9 +1,9 @@
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
 
-Modal.elements = [];
+Popin.elements = [];
 
-function Modal(options = {}) {
+function Popin(options = {}) {
   this.opt = Object.assign(
     {
       destroyOnClose: true,
@@ -30,7 +30,7 @@ function Modal(options = {}) {
   this._handleEscapeKey = this._handleEscapeKey.bind(this);
 }
 
-Modal.prototype._build = function () {
+Popin.prototype._build = function () {
   /**
    * cloneNode(boolean)
    * Dùng để nhân bản Node
@@ -41,10 +41,10 @@ Modal.prototype._build = function () {
 
   // Create modal elements
   this._backdrop = document.createElement("div");
-  this._backdrop.className = "modal-backdrop";
+  this._backdrop.className = "popin__backdrop";
 
   const container = document.createElement("div");
-  container.className = "modal-container";
+  container.className = "popin__container";
 
   this.opt.cssClass.forEach((className) => {
     if (typeof className === "string") {
@@ -53,21 +53,21 @@ Modal.prototype._build = function () {
   });
 
   if (this._allowButtonClose) {
-    const closeBtn = this._createButton("&times;", "modal-close", () =>
+    const closeBtn = this._createButton("&times;", "popin__close", () =>
       this.close()
     );
     container.append(closeBtn);
   }
 
   const modalContent = document.createElement("div");
-  modalContent.className = "modal-content";
+  modalContent.className = "popin__content";
   // Append content and elements
   modalContent.append(content);
   container.append(modalContent);
 
   if (this.opt.footer) {
     this._modalFooter = document.createElement("div");
-    this._modalFooter.className = "modal-footer";
+    this._modalFooter.className = "popin__footer";
 
     this._renderFooterContent();
     this._renderFooterButtons();
@@ -78,25 +78,25 @@ Modal.prototype._build = function () {
   document.body.append(this._backdrop);
 };
 
-Modal.prototype.setFooterContent = function (html) {
+Popin.prototype.setFooterContent = function (html) {
   this._footerContent = html;
   this._renderFooterContent();
 };
 
-Modal.prototype.addFooterButton = function (title, cssClass, callback) {
+Popin.prototype.addFooterButton = function (title, cssClass, callback) {
   const button = this._createButton(title, cssClass, callback);
 
   this._footerButtons.push(button);
   this._renderFooterButtons();
 };
 
-Modal.prototype._renderFooterContent = function () {
+Popin.prototype._renderFooterContent = function () {
   if (this._modalFooter && this._footerContent) {
     this._modalFooter.innerHTML = this._footerContent;
   }
 };
 
-Modal.prototype._renderFooterButtons = function () {
+Popin.prototype._renderFooterButtons = function () {
   if (this._modalFooter) {
     this._footerButtons.forEach((button) => {
       this._modalFooter.append(button);
@@ -104,7 +104,7 @@ Modal.prototype._renderFooterButtons = function () {
   }
 };
 
-Modal.prototype._createButton = function (title, cssClass, callback) {
+Popin.prototype._createButton = function (title, cssClass, callback) {
   const button = document.createElement("button");
   button.className = cssClass;
   button.innerHTML = title;
@@ -113,18 +113,18 @@ Modal.prototype._createButton = function (title, cssClass, callback) {
   return button;
 };
 
-Modal.prototype.open = function () {
-  Modal.elements.push(this);
+Popin.prototype.open = function () {
+  Popin.elements.push(this);
   if (!this._backdrop) {
     this._build();
   }
 
   setTimeout(() => {
-    this._backdrop.classList.add("show");
+    this._backdrop.classList.add("popin--show");
   }, 0);
 
   // Disable scrolling
-  document.body.classList.add("no-scroll");
+  document.body.classList.add("popin--no-scroll");
   document.body.style.paddingRight = this._getScrollbarWidth() + "px";
 
   // Attach event listeners
@@ -145,18 +145,17 @@ Modal.prototype.open = function () {
   return this._backdrop;
 };
 
-Modal.prototype._handleEscapeKey = function (e) {
-  console.log(this);
-  const lastModal = Modal.elements[Modal.elements.length - 1];
-  if (e.key === "Escape" && this === lastModal) {
+Popin.prototype._handleEscapeKey = function (e) {
+  const lastPopin = Popin.elements[Popin.elements.length - 1];
+  if (e.key === "Escape" && this === lastPopin) {
     this.close();
   }
 };
 
-Modal.prototype.close = function (destroy = this.opt.destroyOnClose) {
-  Modal.elements.pop();
+Popin.prototype.close = function (destroy = this.opt.destroyOnClose) {
+  Popin.elements.pop();
 
-  this._backdrop.classList.remove("show");
+  this._backdrop.classList.remove("popin--show");
 
   if (this._allowEscapeClose) {
     document.removeEventListener("keydown", this._handleEscapeKey);
@@ -172,7 +171,7 @@ Modal.prototype.close = function (destroy = this.opt.destroyOnClose) {
     }
 
     // Enable scrolling
-    if (!Modal.elements.length) {
+    if (!Popin.elements.length) {
       document.body.classList.remove("no-scroll");
       document.body.style.paddingRight = "";
     }
@@ -183,18 +182,18 @@ Modal.prototype.close = function (destroy = this.opt.destroyOnClose) {
   });
 };
 
-Modal.prototype.destroy = function () {
+Popin.prototype.destroy = function () {
   this.close(true);
 };
 
-Modal.prototype._onTransitionEnd = function (callback) {
+Popin.prototype._onTransitionEnd = function (callback) {
   this._backdrop.ontransitionend = (e) => {
     if (e.propertyName !== "transform") return;
     if (typeof callback === "function") callback();
   };
 };
 
-Modal.prototype._getScrollbarWidth = function () {
+Popin.prototype._getScrollbarWidth = function () {
   // Caching value
   if (this._scrollbarWidth) return this._scrollbarWidth;
 
@@ -215,15 +214,15 @@ Modal.prototype._getScrollbarWidth = function () {
   return this._scrollbarWidth;
 };
 
-const modal = new Modal({
+const modal = new Popin({
   templateId: "modal-1",
   destroyOnClose: false,
   cssClass: ["class-1", "class-2"],
   onOpen: () => {
-    console.log("Modal Open 1");
+    console.log("Popin Open 1");
   },
   onClose: () => {
-    console.log("Modal close 1");
+    console.log("Popin close 1");
   },
 });
 // modal.open("<h1>Hello An Vo </h1>");
@@ -231,13 +230,13 @@ $("#open-modal-1").onclick = () => {
   modal.open();
 };
 
-const modal2 = new Modal({
+const modal2 = new Popin({
   templateId: "modal-2",
   onOpen: () => {
-    console.log("Modal Open 2");
+    console.log("Popin Open 2");
   },
   onClose: () => {
-    console.log("Modal close 2");
+    console.log("Popin close 2");
   },
 });
 
@@ -258,31 +257,35 @@ $("#open-modal-2").onclick = () => {
   }
 };
 
-const modal3 = new Modal({
+const modal3 = new Popin({
   templateId: "modal-3",
   closeMethods: ["escape"],
   footer: true,
   onOpen: () => {
-    console.log("Modal Open 3");
+    console.log("Popin Open 3");
   },
   onClose: () => {
-    console.log("Modal close 3");
+    console.log("Popin close 3");
   },
 });
 
 // modal3.setFooterContent("<h2>Xin chào Võ Triều An</h2>");
-// modal3.addFooterButton("Danger", "modal-btn danger pull-left", (e) => {
+// modal3.addFooterButton("Danger", "popin__btn popin__btn--danger popin__btn--pull-left", (e) => {
 //   alert("Danger clicked");
 // });
 
-modal3.addFooterButton("Cancel", "modal-btn", (e) => {
+modal3.addFooterButton("Cancel", "popin__btn", (e) => {
   modal3.close();
 });
 
-modal3.addFooterButton("<span>Agree</span>", "modal-btn primary", (e) => {
-  // ...Something
-  modal3.close();
-});
+modal3.addFooterButton(
+  "<span>Agree</span>",
+  "popin__btn popin__btn--primary",
+  (e) => {
+    // ...Something
+    modal3.close();
+  }
+);
 
 $("#open-modal-3").onclick = () => {
   modal3.open();

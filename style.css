@@ -84,3 +84,7 @@ body {
   max-height: 80vh;
   overflow-y: auto;
 }
+
+.no-scroll {
+  overflow: hidden;
+}

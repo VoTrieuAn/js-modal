@@ -1,18 +1,9 @@
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
 
-/* <div id="modal-1" class="modal-backdrop">
-      <div class="modal-container">
-        <button class="modal-close">&times;</button>
-        <div class="modal-content">
-          <p>Modal 1</p>
-        </div>
-      </div>
-    </div> */
-
 function Modal() {
   this.openModal = (options = {}) => {
-    const { templateId } = options;
+    const { templateId, allowBackdropClose = true } = options;
     const template = $(`#${templateId}`);
 
     if (!template) {
@@ -24,7 +15,7 @@ function Modal() {
      * cloneNode(boolean)
      * Dùng để nhân bản Node
      * true: Nếu muốn nhân bản luôn phần tử con, chỉ nhân bản phần tử KHÔNG nhân bản phần xử lý sự kiện
-     * false: Nếu chỉ muốn lấy cha
+     * false: Nếu chỉ muốn lấy cha (default)
      */
     const content = template.content.cloneNode(true);
 
@@ -54,23 +45,32 @@ function Modal() {
       this.closeModal(backdrop);
     };
 
-    backdrop.onclick = (e) => {
-      if (e.target === backdrop) {
-        this.closeModal(backdrop);
-      }
-    };
+    if (allowBackdropClose) {
+      backdrop.onclick = (e) => {
+        if (e.target === backdrop) {
+          this.closeModal(backdrop);
+        }
+      };
+    }
 
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") {
         this.closeModal(backdrop);
       }
     });
+
+    // Disable scrolling
+    document.body.classList.add("no-scroll");
+    return backdrop;
   };
 
   this.closeModal = (modalElement) => {
     modalElement.classList.remove("show");
     modalElement.ontransitionend = function () {
       modalElement.remove();
+
+      // Enable scrolling
+      document.body.classList.remove("no-scroll");
     };
   };
 }
@@ -84,11 +84,25 @@ $("#open-modal-1").onclick = () => {
 };
 
 $("#open-modal-2").onclick = () => {
-  modal.openModal({
+  const modalElement = modal.openModal({
     templateId: "modal-2",
+    allowBackdropClose: false,
   });
+
+  const form = modalElement.querySelector("#login-form");
+  if (form) {
+    form.onsubmit = (e) => {
+      e.preventDefault();
+      const formData = {
+        email: $("#email").value.trim(),
+        password: $("#password").value.trim(),
+      };
+
+      console.log(formData);
+    };
+  }
 };
 
 // 1. Xử lý được sự kiện submit form, lấy được các giá trị của input khi submit
 // 2. Thêm tùy chọn bật/tắt cho phép click vào overlay để đóng modal
-// 3. Không cho phép cuộc trang khi modal hiện thị
+// 3. Không cho phép cuộn trang khi modal hiện thị
